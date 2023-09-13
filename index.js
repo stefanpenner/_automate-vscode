@@ -5,35 +5,80 @@ const {
   Workbench,
 } = require('vscode-automation');
 
-const { join } = require('path');
-
 const {
   PlaywrightDriver
 } = require('vscode-automation/out/playwrightDriver');
 
 const setup = require('./setup');
+const {
+  mkdirSync,
+  rmSync,
+  writeFileSync,
+} = require('fs');
+
+function ensureDirSync(dir) {
+  try {
+    mkdirSync(dir)
+  } catch (e) {
+    if (typeof e === "object" && e !== null && e.code === "EEXIST") {
+      // already exists
+    } else {
+      throw e;
+    }
+  }
+}
 
 (async () => {
-  const logger = new FileLogger(__dirname + '/logs');
+  const root = `${__dirname}/root`;
+  try {
+    rmSync(root, { recursive: true })
+  } catch (e) {
+    if (typeof e === "object" && e !== null && e.code === "ENOENT") {
+      // already doesn't exist
+    }
+  }
+
+  // todo use node-fixturify
+  ensureDirSync(root)
+  ensureDirSync(`${root}/workspace`)
+
+  writeFileSync(`${root}/workspace/foo.mjs`, `
+import { bar } from './bar.mjs'
+
+export function foo() { bar(); }
+`)
+
+  writeFileSync(`${root}/workspace/bar.mjs`, `
+import { foo } from './foo.mjs'
+
+export function bar() { foo(); }
+`)
+
+
+  const logger = new FileLogger(`${root}/log`);
 
   // codePath?: string;
-  // readonly workspacePath: string;
+  // workspacePath: string;
   // userDataDir: string;
-  // readonly extensionsPath: string;
-  // readonly logger: Logger;
+  // extensionsPath: string;
+  // logger: Logger;
   // logsPath: string;
   // crashesPath: string;
-  // readonly verbose?: boolean;
-  // readonly extraArgs?: string[];
-  // readonly remote?: boolean;
-  // readonly web?: boolean;
-  // readonly tracing?: boolean;
-  // readonly headless?: boolean;
-  // readonly browser?: 'chromium' | 'webkit' | 'firefox';
+  // verbose?: boolean;
+  // extraArgs?: string[];
+  // remote?: boolean;
+  // web?: boolean;
+  // tracing?: boolean;
+  // headless?: boolean;
+  // browser?: 'chromium' | 'webkit' | 'firefox';
   const options = {
     logger,
     tracing: false,
-    logsPath: __dirname + '/logs',
+    logsPath: `${root}/logs`,
+    workspacePath: `${root}/workspace`,
+    userDataDir: `${root}/user_data`,
+    extensionsPath: `${root}/extensions`,
+    crashesPath: `${root}/crashes`,
   };
 
   const {
@@ -56,21 +101,28 @@ const setup = require('./setup');
   const workbench = new Workbench(code);
   globalThis.W = workbench
 
-  // TODO: we need to wait for something to be ready..
-  await new Promise(resolve => setTimeout(resolve, 1000))
-  console.log(1)
-  await workbench.editors.newUntitledFile();
-  console.log(2)
-  await new Promise(resolve => setTimeout(resolve, 1000))
-  console.log(3)
-  await workbench.editors.newUntitledFile();
-  console.log(4)
-  await new Promise(resolve => setTimeout(resolve, 1000))
-  console.log(5)
-  await workbench.editor.waitForTypeInEditor('Untitled-1', "Hello, World!");
-  await workbench.editors.waitForTab('Untitled-1', true);
+  // app ready (TODO: hide)
+  await code.waitForElement('.explorer-folders-view');
 
-  // save
-  // await workbench.editors.saveOpenedFile();
+  // test
+  await workbench.quickaccess.openFile(`${root}/workspace/foo.mjs`);
+  await workbench.editors.selectTab("foo.mjs");
+  await workbench.editor.clickOnTerm("foo.mjs", "bar", 2);
+  // TODO: smarter wait
+  await new Promise(r => setTimeout(r, 1000));
+  await workbench.quickaccess.runCommand("go to implementation");
 
+  // TODO: rather then waiting, let's get immediate access to current tab and check that instead
+  await workbench.editors.waitForActiveEditor('bar.mjs');
+  debugger
+
+  // is the right thing selected?
+  globalThis.w = workbench
+  globalThis.c = code
+  // is the right thing selected?
+
+  // TODO: save, how to close native dialog?
+  // something that needs jump to definition
+  // something that needs to run a test
+  // something that needs to debug
 })();

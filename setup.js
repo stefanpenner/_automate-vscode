@@ -1,12 +1,19 @@
 const { _electron } = require('playwright');
 const { App } = require('vscode-automation');
 
-module.exports = async function setup({ logger }) {
+module.exports = async function setup({
+  logger,
+  logsPath,
+  workspacePath,
+  userDataDir,
+  extensionsPath,
+  crashesPath,
+}) {
   // Launch Electron app.
   const electron = await _electron.launch({
     executablePath: '/Applications/Visual Studio Code.app/Contents/MacOS/Electron',
     args: [
-      `${__dirname}/workspace`,
+      workspacePath,
       process.platform === 'linux' && '--disable-dev-shm-usage',
       process.platform === 'linux' && '--disable-gpu',
       process.platform === 'darwin' && '--disable-gpu',
@@ -16,13 +23,13 @@ module.exports = async function setup({ logger }) {
       '--disable-telemetry',
       '--no-cached-data',
       '--disable-updates',
+      '--enable-smoke-test-driver',
       '--use-inmemory-secretstorage',
       '--disable-workspace-trust',
-      // TODO: tmpdir
-      `--crash-reporter-directory=${__dirname} / crashes`,
-      `--extensions-dir=${__dirname} / extensionsPath`,
-      `--user-data-dir=${__dirname} / userDataDir`,
-      `--logsPath=${__dirname} / logsPath`,
+      `--crash-reporter-directory=${crashesPath}`,
+      `--extensions-dir=${extensionsPath}`,
+      `--user-data-dir=${userDataDir}`,
+      `--logsPath=${logsPath}`,
     ].filter(Boolean),
     timeout: 0,
   });
