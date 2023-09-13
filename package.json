@@ -1,0 +1,19 @@
+{
+  "name": "test-vscode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "code-oss-dev": "^0.0.1-security",
+    "playwright": "1.37.1",
+    "vscode-automation": "file:../../microsoft/vscode/test/automation/"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.37.1"
+  }
+}

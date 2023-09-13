@@ -1,0 +1,8 @@
+node_modules
+crashes
+extensionsPath
+logs
+log
+logsPath
+userDataDir
+*.png
