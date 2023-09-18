@@ -21,13 +21,17 @@ jobs:
       fail-fast: false
       matrix:
         node: ['16', '18', '20']
-        os: [ubuntu-latest, macOS-latest, windows-latest]
+        os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
       - uses: volta-cli/action@v1
         with:
           node-version: ${{ matrix.node }}
 
+      - name: install VSCode
+        run: |
+          sudo snap install --classic code
+          find /snap/bin/code
       - name: npm install
         run: npm install
       - name: npm test
