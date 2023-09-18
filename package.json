@@ -16,7 +16,8 @@
     "mjs-dirname": "^1.0.0",
     "playwright": "1.37.1",
     "tmp": "^0.0.33",
-    "vscode-automation": "file:./vendor/vscode-automation"
+    "vscode-automation": "file:./vendor/vscode-automation",
+    "xvfb-maybe": "^0.2.1"
   },
   "devDependencies": {
     "@playwright/test": "1.37.1"
