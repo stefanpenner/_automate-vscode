@@ -22,7 +22,6 @@ export function bar() { foo(); }
   });
 
   await project.write();
-  debugger;
 
   await vscode(project.baseDir, async ({ driver, workbench }) => {
     await workbench.quickaccess.openFile(`${project.baseDir}/foo.mjs`);
