@@ -1,7 +1,9 @@
-const { _electron } = require('playwright');
-const { App } = require('vscode-automation');
+import { _electron } from 'playwright';
+import vscodeAutomation from 'vscode-automation';
 
-module.exports = async function setup({
+const App = { vscodeAutomation };
+
+export async function setup({
   logger,
   logsPath,
   workspacePath,
