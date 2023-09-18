@@ -1,6 +1,7 @@
 import { _electron } from 'playwright';
 import vscodeAutomation from 'vscode-automation';
-
+import tmp from 'tmp';
+tmp.setGracefulCleanup();
 const {
   FileLogger,
   Code,
@@ -13,7 +14,8 @@ const { PlaywrightDriver } = p;
 import { setup } from './setup.mjs';
 
 export async function vscode(root, fn) {
-  const logger = new FileLogger(`${root}/log`);
+  const { name: tmpDir } = tmp.dirSync({ unsafeCleanup: true });
+  const logger = new FileLogger(`${tmpDir}/log`);
 
   const last_workbench = globalThis.WORKBENCH;
   const last_code = globalThis.CODE;
@@ -38,11 +40,11 @@ export async function vscode(root, fn) {
     const options = {
       logger,
       tracing: false,
-      logsPath: `${root}/logs`,
-      workspacePath: `${root}/workspace`,
-      userDataDir: `${root}/user_data`,
-      extensionsPath: `${root}/extensions`,
-      crashesPath: `${root}/crashes`,
+      logsPath: `${tmpDir}/logs`,
+      workspacePath: `${root}`,
+      userDataDir: `${tmpDir}/user_data`,
+      extensionsPath: `${tmpDir}/extensions`,
+      crashesPath: `${tmpDir}/crashes`,
     };
 
     const {
@@ -76,7 +78,8 @@ export async function vscode(root, fn) {
       code,
       workbench,
       root,
-      driver
+      driver,
+      tmpDir,
     });
     // cleanup
   } finally {

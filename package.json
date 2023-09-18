@@ -4,16 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node ./test.mjs",
-    "test:inspect": "node inspect ./test.mjs",
-    "test:inspect:brk": "node --inspect-brk ./test.mjs"
+    "test": "node --test ./test.mjs",
+    "test:inspect": "node inspect --test ./test.mjs",
+    "test:inspect:brk": "node --inspect-brk --test ./test.mjs"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "code-oss-dev": "^0.0.1-security",
+    "fixturify-project": "^6.0.0",
     "mjs-dirname": "^1.0.0",
+    "node-fixturify-project": "^1.2.0",
     "playwright": "1.37.1",
+    "tmp": "^0.0.33",
     "vscode-automation": "file:../../microsoft/vscode/test/automation/"
   },
   "devDependencies": {
