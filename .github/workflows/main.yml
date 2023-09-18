@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         node: ['16', '18', '20']
         os: [ubuntu-latest, macOS-latest, windows-latest]
@@ -27,5 +28,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: npm install
+        run: npm install
       - name: npm test
         run: npm test
