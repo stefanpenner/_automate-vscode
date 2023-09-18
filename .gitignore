@@ -1,3 +1,4 @@
 node_modules
 *.png
 root
+node_modules/vscode-automation/node_modules/*
