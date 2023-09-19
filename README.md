@@ -12,7 +12,6 @@ import { Project } from 'fixturify-project';
 
 test('goToImplementation: foo.mjs[bar reference] -> bar.mjs[bar definition] ', async () => {
   const project = SimpleNodeProject.clone();
-
   await project.write();
 
   await vscode(project.baseDir, async ({ driver, workbench }) => {
