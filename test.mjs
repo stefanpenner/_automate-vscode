@@ -27,7 +27,7 @@ test('goToImplementation: foo.mjs[bar reference] -> bar.mjs[bar definition] ', a
   });
 });
 
-test('Debug: Set|Break|Continue Breakpoint on main.mjs[foo]', async () => {
+test('Debug: [Set|Break|Continue Breakpoint|Run] on main.mjs[foo]', async () => {
   const project = SimpleNodeProject.clone()
   await project.write();
 
