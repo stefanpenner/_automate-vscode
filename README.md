@@ -28,12 +28,6 @@ test('goToImplementation: foo.mjs[bar reference] -> bar.mjs[bar definition] ', a
 
     assert.ok("Go to implementation worked")
   });
-
-  // jump to implementation for dependency
-
-  // something that needs jump to definition
-  // something that needs to run a test
-  // something that needs to debug
 });
 ```
 
