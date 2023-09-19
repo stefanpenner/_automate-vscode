@@ -28,9 +28,18 @@ test('goToImplementation: foo.mjs[bar reference] -> bar.mjs[bar definition] ', a
   });
 });
 
-  // jump to implementation for dependency
+test('Debug: Run to Cursor', async () => {
+  const project = SimpleNodeProject.clone()
+  await project.write();
 
-  // something that needs jump to definition
-  // something that needs to run a test
-  // something that needs to debug
+  await vscode(project.baseDir, async ({ driver, workbench }) => {
+    await workbench.quickaccess.openFile(`${project.baseDir}/main.mjs`);
+    await workbench.editors.selectTab("main.mjs");
+    await workbench.editor.clickOnTerm("main.mjs", "foo", 3);
+
+    await workbench.quickaccess.runCommand("Debug: Add Conditional Breakpoint");
+    console.log('will:enter');
+    await driver.dispatchKeybinding("Enter");
+    console.log('did:enter');
+  });
 });
