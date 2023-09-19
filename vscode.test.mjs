@@ -17,8 +17,10 @@ test('goToImplementation: foo.mjs[bar reference] -> bar.mjs[bar definition] ', a
     await workbench.quickaccess.openFile(`${project.baseDir}/foo.mjs`);
     await workbench.editors.selectTab("foo.mjs");
     await workbench.editor.clickOnTerm("foo.mjs", "bar", 3);
+
     // TODO: deterministic for click to settle
     await driver.wait(1000);
+
     await workbench.quickaccess.runCommand("go to implementation");
 
     await workbench.editors.waitForActiveEditor('bar.mjs');
@@ -67,7 +69,6 @@ async function retryAssertion(fn, COUNT = 10, ms = 100) {
     try {
       await fn();
     } catch (e) {
-      debugger
       if (typeof e === 'object' && e !== null && e.name === 'AssertionError') {
         count++;
         if (COUNT < count) {
