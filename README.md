@@ -50,3 +50,35 @@ export function bar() { foo(); }
   // something that needs to debug
 });
 ```
+
+Test that the debugger works
+```js
+test('Debug: Set|Break|Continue Breakpoint on main.mjs[foo]', async () => {
+  const project = SimpleNodeProject.clone()
+  await project.write();
+
+  await vscode(project.baseDir, async ({ driver, workbench }) => {
+    await workbench.quickaccess.openFile(`${project.baseDir}/main.mjs`);
+    await workbench.editors.selectTab("main.mjs");
+    await workbench.editor.clickOnTerm("main.mjs", "foo", 7);
+
+    await workbench.quickaccess.runCommand("Debug: Toggle Breakpoint");
+
+    await driver.dispatchKeybinding("F5"); // Continue debugger
+
+    // wait for the debug console to open and the right callstack appear
+    await driver.page.locator('[aria-label="Debug Call Stack"] > [role="presentation"]').waitFor();
+
+    await driver.dispatchKeybinding("F5"); // Continue debugger
+
+    await driver.page.click('.debug-toolbar [role=toolbar] [title^="Continue"]');
+
+    await retryAssertion(async () => {
+      const debugTerminalText = await driver.page.locator('.repl [aria-label="Debug Console"] > [role="presentation"]').textContent();
+      assert.match(debugTerminalText, /Program Complete/);
+    });
+
+    assert.ok('Workflow Succeeded')
+  });
+});
+```
