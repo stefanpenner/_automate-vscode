@@ -3,30 +3,20 @@ import assert from 'assert';
 
 import { vscode } from './vscode.mjs'
 import { Project } from 'fixturify-project';
+import { dirname, filename } from 'mjs-dirname';
+
+const __dirname = dirname(import.meta.url);
+// setup project
+const SimpleNodeProject = Project.fromDir(`${__dirname}/fixtures/simple-node-project`);
 
 test('goToImplementation: foo.mjs[bar reference] -> bar.mjs[bar definition] ', async () => {
-  // setup project
-  const project = new Project('my-project', project => {
-
-    project.files['foo.mjs'] = `
-import { bar } from './bar.mjs'
-
-export function foo() { bar(); }
-`;
-
-    project.files['bar.mjs'] = `
-import { foo } from './foo.mjs'
-
-export function bar() { foo(); }
-`;
-  });
-
+  const project = SimpleNodeProject.clone()
   await project.write();
 
   await vscode(project.baseDir, async ({ driver, workbench }) => {
     await workbench.quickaccess.openFile(`${project.baseDir}/foo.mjs`);
     await workbench.editors.selectTab("foo.mjs");
-    await workbench.editor.clickOnTerm("foo.mjs", "bar", 2);
+    await workbench.editor.clickOnTerm("foo.mjs", "bar", 3);
     // TODO: deterministic for click to settle
     await driver.wait(1000);
     await workbench.quickaccess.runCommand("go to implementation");
@@ -34,8 +24,9 @@ export function bar() { foo(); }
     // TODO: rather then waiting, let's check to see what tab is current active
     await workbench.editors.waitForActiveEditor('bar.mjs');
 
-    assert.ok("Go to implementation worked")
+    assert.ok('GoToImplementation succeeded')
   });
+});
 
   // jump to implementation for dependency
 
