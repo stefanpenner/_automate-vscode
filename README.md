@@ -25,7 +25,7 @@ test('goToImplementation: foo.mjs[bar reference] -> bar.mjs[bar definition] ', a
     // TODO: rather then waiting, let's check to see what tab is current active
     await workbench.editors.waitForActiveEditor('bar.mjs');
 
-    assert.ok("Go to implementation worked")
+    assert.ok("Go to implementation worked");
   });
 });
 ```
@@ -57,7 +57,7 @@ test('Debug: [Set|Break|Continue Breakpoint|Run] on main.mjs[foo]', async () => 
       assert.match(debugTerminalText, /Program Complete/);
     });
 
-    assert.ok('Workflow Succeeded')
+    assert.ok('Workflow Succeeded');
   });
 });
 ```
