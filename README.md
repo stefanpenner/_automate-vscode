@@ -11,21 +11,7 @@ import { vscode } from './vscode.mjs'
 import { Project } from 'fixturify-project';
 
 test('goToImplementation: foo.mjs[bar reference] -> bar.mjs[bar definition] ', async () => {
-  // setup project
-  const project = new Project('my-project', project => {
-
-    project.files['foo.mjs'] = `
-import { bar } from './bar.mjs'
-
-export function foo() { bar(); }
-`;
-
-    project.files['bar.mjs'] = `
-import { foo } from './foo.mjs'
-
-export function bar() { foo(); }
-`;
-  });
+  const project = SimpleNodeProject.clone();
 
   await project.write();
 
