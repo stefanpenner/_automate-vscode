@@ -4,6 +4,7 @@ import assert from 'assert';
 import { vscode } from './vscode.mjs'
 import { Project } from 'fixturify-project';
 import { dirname } from 'mjs-dirname';
+import { retryAssertion } from './utils.mjs';
 
 const __dirname = dirname(import.meta.url);
 // setup project
@@ -57,28 +58,3 @@ test('Debug: [Set|Break|Continue Breakpoint|Run] on main.mjs[foo]', async () => 
     assert.ok('Workflow Succeeded')
   });
 });
-
-import {
-  setTimeout,
-} from 'timers/promises';
-
-async function retryAssertion(fn, COUNT = 10, ms = 100) {
-  let count = 0;
-
-  await (async function next() {
-    try {
-      await fn();
-    } catch (e) {
-      if (typeof e === 'object' && e !== null && e.name === 'AssertionError') {
-        count++;
-        if (COUNT < count) {
-          throw e;
-        } else {
-          await setTimeout(next, ms)
-        }
-      } else {
-        throw e;
-      }
-    }
-  })();
-}
