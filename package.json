@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node --test ./test.mjs",
-    "test:inspect": "node inspect --test ./test.mjs",
-    "test:inspect:brk": "node --inspect-brk --test ./test.mjs"
+    "test": "node --test",
+    "test:inspect": "node inspect --test",
+    "test:inspect:brk": "node --inspect-brk --test"
   },
   "author": "",
   "license": "ISC",
