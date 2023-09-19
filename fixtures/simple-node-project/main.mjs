@@ -1,10 +1,10 @@
 (async function main() {
-  console.log('hi');
+  console.log('starting main');
   function foo() {
-    console.log('foo')
+    console.log('running foo')
   }
 
   foo();
-  console.log('bye');
+  console.log('Program Complete');
 })();
 
